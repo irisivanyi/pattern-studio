@@ -32,18 +32,22 @@ export default function InfoPageBackgroundBlur() {
 
   return (
     <div
-      className="fixed inset-0 pointer-events-none z-0"
+      className="fixed pointer-events-none z-0"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         opacity: 0.5,
-        // Ensure it covers full viewport on Safari/iOS - use dvh to account for browser chrome
-        minWidth: '100vw',
-        minHeight: '100dvh',
-        width: '100vw',
-        height: '100dvh',
+        // Extend to actual screen edges, including under safe areas
+        top: `calc(0px - env(safe-area-inset-top))`,
+        right: `calc(0px - env(safe-area-inset-right))`,
+        bottom: `calc(0px - env(safe-area-inset-bottom))`,
+        left: `calc(0px - env(safe-area-inset-left))`,
+        width: `calc(100vw + env(safe-area-inset-left) + env(safe-area-inset-right))`,
+        height: `calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom))`,
+        minWidth: `calc(100vw + env(safe-area-inset-left) + env(safe-area-inset-right))`,
+        minHeight: `calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom))`,
       }}
     />
   )
