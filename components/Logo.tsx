@@ -39,32 +39,40 @@ export default function Logo({ scrolled }: LogoProps) {
         clipPath: 'none',
         WebkitClipPath: 'none',
         boxSizing: 'content-box',
-        // Use transform only for better performance (no top property)
-        top: scrolled ? '20px' : '50%',
-        transform: scrolled ? 'translate(-50%, 0)' : 'translate(-50%, -50%)',
-        // Optimized transitions: use transform3d for GPU acceleration
+        // Use transform only for better performance - combine position and scale
+        top: '50%',
+        left: '50%',
+        // Combine all transforms for better performance
+        // When scrolled: move to top (20px) and scale down to 0.5
+        // Calculate: from center (50vh) to 20px = translateY(-50vh + 20px)
+        transform: scrolled 
+          ? 'translate(-50%, -50%) translateY(calc(-50vh + 60px)) scale(0.5)' 
+          : 'translate(-50%, -50%) scale(1)',
+        transformOrigin: 'center center',
+        // Single transform transition for smooth animation
         transition: visible 
-          ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), top 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
-          : 'opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), top 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
+          : 'opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         // Force GPU acceleration
         backfaceVisibility: 'hidden',
         WebkitBackfaceVisibility: 'hidden',
-        perspective: 1000
+        willChange: 'transform'
       }}
     >
       <img
         src={`/logo-var-${logoVariant}.svg`}
         alt="pattern"
         style={{
-          width: scrolled ? '200px' : '400px',
+          width: '400px',
           height: 'auto',
           display: 'block',
-          transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          // Prevent blurriness on mobile - use optimize-contrast for SVGs
-          imageRendering: '-webkit-optimize-contrast' as any,
-          // Force GPU acceleration for smooth rendering
+          // Use scale instead of width change for better performance
+          // Prevent blurriness on mobile
+          imageRendering: 'auto' as any,
+          // Force GPU acceleration
           transform: 'translateZ(0)',
-          willChange: 'width'
+          WebkitFontSmoothing: 'antialiased',
+          MozOsxFontSmoothing: 'grayscale'
         }}
       />
     </div>
