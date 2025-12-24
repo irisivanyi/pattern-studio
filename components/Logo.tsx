@@ -34,19 +34,22 @@ export default function Logo({ scrolled }: LogoProps) {
         width: 'max-content',
         minWidth: 'max-content',
         overflow: 'visible',
-        contain: 'none',
+        contain: 'layout style paint',
         isolation: 'isolate',
-        willChange: visible ? 'transform' : 'transform, opacity',
         clipPath: 'none',
         WebkitClipPath: 'none',
         boxSizing: 'content-box',
-        // Smooth transition for position
+        // Use transform only for better performance (no top property)
         top: scrolled ? '20px' : '50%',
         transform: scrolled ? 'translate(-50%, 0)' : 'translate(-50%, -50%)',
-        // Separate transitions: opacity only on initial fade-in, transform and top always
+        // Optimized transitions: use transform3d for GPU acceleration
         transition: visible 
-          ? 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
-          : 'opacity 0.3s ease-in-out, top 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+          ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), top 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
+          : 'opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), top 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        // Force GPU acceleration
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        perspective: 1000
       }}
     >
       <img
@@ -56,7 +59,12 @@ export default function Logo({ scrolled }: LogoProps) {
           width: scrolled ? '200px' : '400px',
           height: 'auto',
           display: 'block',
-          transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+          transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          // Prevent blurriness on mobile - use optimize-contrast for SVGs
+          imageRendering: '-webkit-optimize-contrast' as any,
+          // Force GPU acceleration for smooth rendering
+          transform: 'translateZ(0)',
+          willChange: 'width'
         }}
       />
     </div>

@@ -13,23 +13,35 @@ export default function Home() {
   const scrollThreshold = 100
 
   useEffect(() => {
+    let ticking = false
+
     const handleScroll = () => {
-      const scrollY = window.scrollY || window.pageYOffset
-      const isHomePage = activePage === 'home'
-      
-      if (!isHomePage) {
-        // Info page always has small logo at top
-        setScrolled(true)
-      } else {
-        // Home page: large when at top, small when scrolled
-        setScrolled(scrollY > scrollThreshold)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY || window.pageYOffset
+          const isHomePage = activePage === 'home'
+          
+          if (!isHomePage) {
+            // Info page always has small logo at top
+            setScrolled(true)
+          } else {
+            // Home page: large when at top, small when scrolled
+            setScrolled(scrollY > scrollThreshold)
+          }
+          
+          ticking = false
+        })
+        
+        ticking = true
       }
     }
 
     // Initial check
-    handleScroll()
+    const scrollY = window.scrollY || window.pageYOffset
+    const isHomePage = activePage === 'home'
+    setScrolled(isHomePage ? scrollY > scrollThreshold : true)
 
-    // Add scroll listener
+    // Add scroll listener with throttling via requestAnimationFrame
     window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
