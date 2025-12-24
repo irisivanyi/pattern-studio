@@ -40,14 +40,14 @@ export default function InfoPageBackgroundBlur() {
         backgroundRepeat: 'no-repeat',
         opacity: 0.5,
         // Extend to actual screen edges, including under safe areas
-        top: `calc(0px - env(safe-area-inset-top))`,
-        right: `calc(0px - env(safe-area-inset-right))`,
-        bottom: `calc(0px - env(safe-area-inset-bottom))`,
-        left: `calc(0px - env(safe-area-inset-left))`,
-        width: `calc(100vw + env(safe-area-inset-left) + env(safe-area-inset-right))`,
-        height: `calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom))`,
-        minWidth: `calc(100vw + env(safe-area-inset-left) + env(safe-area-inset-right))`,
-        minHeight: `calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom))`,
+        top: `calc(0px - env(safe-area-inset-top, 0px))`,
+        right: `calc(0px - env(safe-area-inset-right, 0px))`,
+        bottom: `calc(0px - env(safe-area-inset-bottom, 0px))`,
+        left: `calc(0px - env(safe-area-inset-left, 0px))`,
+        width: `calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))`,
+        height: `calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))`,
+        minWidth: `calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))`,
+        minHeight: `calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))`,
       }}
     />
   )
