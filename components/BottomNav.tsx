@@ -14,11 +14,11 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
     <nav className="fixed bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 bg-nav-bg rounded-[64px] px-5 py-5 flex gap-8 items-center justify-center z-[1000]">
       <button
         onClick={() => onNavigate('home')}
-        className="w-6 h-6 flex items-center justify-center"
+        className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center"
         aria-label="Home"
       >
         <svg
-          className={`w-6 h-6 text-[#141414] transition-opacity duration-200 hover:opacity-80 ${
+          className={`w-8 h-8 sm:w-6 sm:h-6 text-[#141414] transition-opacity duration-200 hover:opacity-80 ${
             activePage === 'home' ? 'opacity-100' : 'opacity-50'
           }`}
           viewBox="0 0 24 24"
@@ -32,11 +32,11 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
       </button>
       <button
         onClick={() => onNavigate('info')}
-        className="w-6 h-6 flex items-center justify-center"
+        className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center"
         aria-label="Info"
       >
         <svg
-          className={`w-6 h-6 text-[#141414] transition-opacity duration-200 hover:opacity-80 ${
+          className={`w-8 h-8 sm:w-6 sm:h-6 text-[#141414] transition-opacity duration-200 hover:opacity-80 ${
             activePage === 'info' ? 'opacity-100' : 'opacity-50'
           }`}
           viewBox="0 0 24 24"
@@ -54,11 +54,11 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
       </button>
       <button
         onClick={handleMessageClick}
-        className="w-6 h-6 flex items-center justify-center"
+        className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center"
         aria-label="Message"
       >
         <svg
-          className="w-6 h-6 text-[#141414] opacity-50 transition-opacity duration-200 hover:opacity-80"
+          className="w-8 h-8 sm:w-6 sm:h-6 text-[#141414] opacity-50 transition-opacity duration-200 hover:opacity-80"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
