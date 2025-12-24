@@ -28,12 +28,11 @@
     overflow-x: visible;
     /* Use small viewport height for better Safari support - smallest possible viewport */
     height: 100svh;
-    /* Set a background color that extends into safe areas to prevent white flash */
+    /* Set a background color that matches the background image to prevent white bars */
     background-color: #f0f0f0;
-    /* Extend background into safe areas using padding and negative margin */
+    /* Ensure background extends into safe areas - use padding only, no negative margins */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
-    margin: calc(-1 * env(safe-area-inset-top, 0px)) calc(-1 * env(safe-area-inset-right, 0px)) calc(-1 * env(safe-area-inset-bottom, 0px)) calc(-1 * env(safe-area-inset-left, 0px));
-    /* Ensure background covers the full area */
+    /* Ensure background covers the full area including safe areas */
     min-height: calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
   }
   

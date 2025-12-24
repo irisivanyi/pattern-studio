@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useLayoutEffect } from 'react'
 
 export default function InfoPageBackgroundBlur() {
   // Randomly select one of the three background variants on mount
@@ -9,10 +9,14 @@ export default function InfoPageBackgroundBlur() {
     return random
   })
 
-  // Detect if viewport is mobile
-  const [isMobile, setIsMobile] = useState(false)
+  // Detect if viewport is mobile - use useLayoutEffect to set before paint
+  const [isMobile, setIsMobile] = useState(() => {
+    // SSR-safe: default to mobile-first
+    if (typeof window === 'undefined') return true
+    return window.innerWidth < 640
+  })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const checkViewport = () => {
       setIsMobile(window.innerWidth < 640) // sm breakpoint
     }

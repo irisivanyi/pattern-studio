@@ -25,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="overflow-x-clip overflow-y-auto">
-      <body className={`${inter.variable} font-inter overflow-x-hidden overflow-y-auto`}>{children}</body>
+    <html lang="en">
+      <body className={`${inter.variable} font-inter`}>{children}</body>
     </html>
   )
 }
