@@ -39,11 +39,11 @@ export default function BackgroundBlur() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         opacity: 0.64,
-        // Ensure it covers full viewport on Safari
+        // Ensure it covers full viewport on Safari/iOS - use dvh to account for browser chrome
         minWidth: '100vw',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         width: '100vw',
-        height: '100vh',
+        height: '100dvh',
       }}
     />
   )

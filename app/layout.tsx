@@ -11,6 +11,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'pattern',
   description: 'Pattern website',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    viewportFit: 'cover',
+  },
 }
 
 export default function RootLayout({

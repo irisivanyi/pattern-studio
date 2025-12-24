@@ -8,16 +8,22 @@
   }
 
   body {
-    @apply bg-white relative min-h-screen pb-[120px];
+    @apply bg-white relative;
     overflow-y: auto;
     /* Don't clip fixed elements horizontally */
     overflow-x: visible;
+    /* Use dynamic viewport height for Safari/iOS - accounts for browser chrome */
+    min-height: 100dvh;
+    /* Add padding for bottom nav + safe area on iOS */
+    padding-bottom: calc(120px + env(safe-area-inset-bottom));
   }
   
   html {
     overflow-y: auto;
     /* Don't clip fixed elements horizontally */
     overflow-x: visible;
+    /* Use dynamic viewport height for Safari/iOS - accounts for browser chrome */
+    height: 100dvh;
   }
   
   /* Ensure fixed elements can extend beyond viewport */

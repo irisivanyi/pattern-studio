@@ -11,7 +11,12 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
   }
 
   return (
-    <nav className="fixed bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 bg-nav-bg rounded-[64px] px-5 py-5 flex gap-8 items-center justify-center z-[1000]">
+    <nav 
+      className="fixed sm:bottom-8 left-1/2 -translate-x-1/2 bg-nav-bg rounded-[64px] px-5 py-5 flex gap-8 items-center justify-center z-[1000]" 
+      style={{ 
+        bottom: 'calc(1rem + env(safe-area-inset-bottom))'
+      }}
+    >
       <button
         onClick={() => onNavigate('home')}
         className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center"

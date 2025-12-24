@@ -64,7 +64,7 @@ export default function Home() {
   }
 
   return (
-    <main className="relative w-full min-h-screen overflow-visible">
+    <main className="relative w-full overflow-visible" style={{ minHeight: '100dvh' }}>
       <Logo scrolled={scrolled} />
       
       {activePage === 'home' && <HomePage />}
