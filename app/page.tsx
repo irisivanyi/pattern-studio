@@ -5,7 +5,6 @@ import Logo from '@/components/Logo'
 import BottomNav from '@/components/BottomNav'
 import HomePage from '@/components/HomePage'
 import InfoPage from '@/components/InfoPage'
-import BackgroundSetter from '@/components/BackgroundSetter'
 
 export default function Home() {
   const [activePage, setActivePage] = useState<'home' | 'info' | 'message'>('home')
@@ -66,7 +65,6 @@ export default function Home() {
 
   return (
     <main className="relative w-full overflow-visible" style={{ minHeight: '100dvh' }}>
-      <BackgroundSetter />
       <Logo scrolled={scrolled} />
       
       {activePage === 'home' && <HomePage />}
