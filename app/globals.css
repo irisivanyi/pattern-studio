@@ -18,6 +18,8 @@
     padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
     /* Remove white background to allow background image to show through */
     background: transparent !important;
+    /* Ensure body doesn't clip the extended background */
+    overflow: visible;
   }
   
   html {
@@ -26,8 +28,13 @@
     overflow-x: visible;
     /* Use small viewport height for better Safari support - smallest possible viewport */
     height: 100svh;
-    /* Remove white background to allow background image to show through */
-    background: transparent;
+    /* Set a background color that extends into safe areas to prevent white flash */
+    background-color: #f0f0f0;
+    /* Extend background into safe areas using padding and negative margin */
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    margin: calc(-1 * env(safe-area-inset-top, 0px)) calc(-1 * env(safe-area-inset-right, 0px)) calc(-1 * env(safe-area-inset-bottom, 0px)) calc(-1 * env(safe-area-inset-left, 0px));
+    /* Ensure background covers the full area */
+    min-height: calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
   }
   
   /* Ensure fixed elements can extend beyond viewport */

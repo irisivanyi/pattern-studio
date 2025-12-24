@@ -40,12 +40,12 @@ export default function InfoPageBackgroundBlur() {
         backgroundRepeat: 'no-repeat',
         opacity: 0.5,
         // Extend to actual screen edges, including under safe areas
-        // Use negative positioning to extend beyond safe areas
+        // Position from the actual screen edges (not viewport edges)
         top: `calc(-1 * env(safe-area-inset-top, 0px))`,
         right: `calc(-1 * env(safe-area-inset-right, 0px))`,
         bottom: `calc(-1 * env(safe-area-inset-bottom, 0px))`,
         left: `calc(-1 * env(safe-area-inset-left, 0px))`,
-        // Use small viewport height for better Safari support
+        // Make it large enough to cover safe areas - use viewport units for fixed positioning
         width: `calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))`,
         height: `calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))`,
         minWidth: `calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))`,
