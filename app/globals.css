@@ -28,14 +28,48 @@
     overflow-x: visible;
     /* Use small viewport height for better Safari support - smallest possible viewport */
     height: 100svh;
-    /* TEST: Set red background to see if white bars persist */
-    background-color: red !important;
-    /* Ensure background extends into safe areas - use padding only, no negative margins */
+    /* Set background image directly on html element - extends into safe areas */
+    background-image: var(--bg-image, url('/mobile-bg-var-1.webp'));
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* Set opacity via rgba or use a pseudo-element for opacity */
+    background-color: transparent;
+    /* Ensure background extends into safe areas - use padding and negative margins */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
     /* Ensure background covers the full area including safe areas */
     min-height: calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
     /* Extend background to cover safe areas */
     margin: calc(-1 * env(safe-area-inset-top, 0px)) calc(-1 * env(safe-area-inset-right, 0px)) calc(-1 * env(safe-area-inset-bottom, 0px)) calc(-1 * env(safe-area-inset-left, 0px));
+    /* Use pseudo-element for opacity control */
+    position: relative;
+  }
+
+  /* Use pseudo-element to apply opacity to background image */
+  html::before {
+    content: '';
+    position: fixed;
+    top: calc(-1 * env(safe-area-inset-top, 0px));
+    right: calc(-1 * env(safe-area-inset-right, 0px));
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
+    left: calc(-1 * env(safe-area-inset-left, 0px));
+    background-image: var(--bg-image, url('/mobile-bg-var-1.webp'));
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.64;
+    z-index: 0;
+    pointer-events: none;
+    width: calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px));
+    height: calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Desktop background images */
+  @media (min-width: 640px) {
+    html::before {
+      background-image: var(--bg-image-desktop, url('/desktop-bg-var-1.webp'));
+    }
   }
   
   /* Ensure fixed elements can extend beyond viewport */
@@ -48,6 +82,8 @@
   main {
     overflow-x: hidden;
     overflow-y: visible;
+    position: relative;
+    z-index: 1;
   }
 
   @font-face {
