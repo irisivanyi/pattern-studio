@@ -40,14 +40,16 @@ export default function BackgroundBlur() {
         backgroundRepeat: 'no-repeat',
         opacity: 0.64,
         // Extend to actual screen edges, including under safe areas
-        top: `calc(0px - env(safe-area-inset-top, 0px))`,
-        right: `calc(0px - env(safe-area-inset-right, 0px))`,
-        bottom: `calc(0px - env(safe-area-inset-bottom, 0px))`,
-        left: `calc(0px - env(safe-area-inset-left, 0px))`,
+        // Use negative positioning to extend beyond safe areas
+        top: `calc(-1 * env(safe-area-inset-top, 0px))`,
+        right: `calc(-1 * env(safe-area-inset-right, 0px))`,
+        bottom: `calc(-1 * env(safe-area-inset-bottom, 0px))`,
+        left: `calc(-1 * env(safe-area-inset-left, 0px))`,
+        // Use small viewport height for better Safari support
         width: `calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))`,
-        height: `calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))`,
+        height: `calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))`,
         minWidth: `calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))`,
-        minHeight: `calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))`,
+        minHeight: `calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))`,
       }}
     />
   )

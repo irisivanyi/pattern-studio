@@ -24,8 +24,8 @@
     overflow-y: auto;
     /* Don't clip fixed elements horizontally */
     overflow-x: visible;
-    /* Use dynamic viewport height for Safari/iOS - accounts for browser chrome */
-    height: 100dvh;
+    /* Use small viewport height for better Safari support - smallest possible viewport */
+    height: 100svh;
     /* Remove white background to allow background image to show through */
     background: transparent;
   }
