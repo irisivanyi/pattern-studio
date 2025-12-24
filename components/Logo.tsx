@@ -10,11 +10,22 @@ interface LogoProps {
 export default function Logo({ scrolled }: LogoProps) {
   const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   // Randomly select one of the three logo variants on each page load
   const [logoVariant] = useState(() => {
     const random = Math.floor(Math.random() * 3) + 1
     return random
   })
+
+  // Detect mobile viewport
+  useLayoutEffect(() => {
+    const checkViewport = () => {
+      setIsMobile(window.innerWidth < 640) // sm breakpoint
+    }
+    checkViewport()
+    window.addEventListener('resize', checkViewport)
+    return () => window.removeEventListener('resize', checkViewport)
+  }, [])
 
   // Use useLayoutEffect to mount immediately (synchronously) before paint
   useLayoutEffect(() => {
@@ -63,7 +74,8 @@ export default function Logo({ scrolled }: LogoProps) {
         src={`/logo-var-${logoVariant}.svg`}
         alt="pattern"
         style={{
-          width: '400px',
+          width: isMobile ? '80vw' : '380px', // Proportional to viewport on mobile
+          maxWidth: isMobile ? '80vw' : '380px',
           height: 'auto',
           display: 'block',
           // Use scale instead of width change for better performance

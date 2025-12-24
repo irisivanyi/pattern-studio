@@ -32,11 +32,18 @@ export default function BackgroundBlur() {
 
   return (
     <div
-      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1431px] h-[2275.672px] pointer-events-none z-0"
+      className="fixed inset-0 pointer-events-none z-0"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        opacity: 0.64,
+        // Ensure it covers full viewport on Safari
+        minWidth: '100vw',
+        minHeight: '100vh',
+        width: '100vw',
+        height: '100vh',
       }}
     />
   )
