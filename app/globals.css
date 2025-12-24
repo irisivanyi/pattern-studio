@@ -49,10 +49,10 @@
     bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
     left: calc(-1 * env(safe-area-inset-left, 0px));
     background-image: var(--bg-image, url('/mobile-bg-var-1.webp'));
-    background-size: cover;
-    background-position: center;
+    /* Use 100% to ensure background covers the entire element, not just viewport */
+    background-size: 120% 120%;
+    background-position: center center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
     opacity: 0.64;
     z-index: 0;
     pointer-events: none;
