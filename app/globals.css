@@ -30,8 +30,11 @@
     overflow-x: visible;
     /* Use small viewport height for better Safari support - smallest possible viewport */
     height: 100svh;
-    /* Set gradient background that extends into safe areas */
+    /* Set gradient background that extends into safe areas - no repeat, fixed size */
     background: linear-gradient(180deg, #DDF9AB 0%, #DED884 50%, #E5DFAF 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
     /* Ensure background extends into safe areas - use padding and negative margins */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
     /* Ensure background covers the full area including safe areas */
