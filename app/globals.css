@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  body {
+    @apply bg-white relative min-h-screen pb-[120px];
+    overflow-y: auto;
+    /* Don't clip fixed elements horizontally */
+    overflow-x: visible;
+  }
+  
+  html {
+    overflow-y: auto;
+    /* Don't clip fixed elements horizontally */
+    overflow-x: visible;
+  }
+  
+  /* Ensure fixed elements can extend beyond viewport */
+  #__next {
+    overflow-x: visible !important;
+    position: relative;
+  }
+  
+  /* Prevent horizontal scroll on main content but allow logo to extend */
+  main {
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  @font-face {
+    font-family: 'GT Maru Trial';
+    font-weight: 500;
+    font-style: normal;
+    src: local('GT Maru Trial Medium'), local('GT-Maru-Trial-Medium');
+  }
+}
+
