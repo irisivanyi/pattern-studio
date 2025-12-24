@@ -1,9 +1,9 @@
-import InfoPageBackgroundBlur from './InfoPageBackgroundBlur'
+// import InfoPageBackgroundBlur from './InfoPageBackgroundBlur'
 
 export default function InfoPage() {
   return (
     <div className="relative w-full min-h-screen flex items-start justify-center pt-[73px]">
-      <InfoPageBackgroundBlur />
+      {/* <InfoPageBackgroundBlur /> */}
       <div className="relative z-[1] w-full max-w-[356px] h-[562px] bg-nav-bg rounded-[32px] px-[19px] py-[25px] flex flex-col items-center overflow-hidden mx-4">
         <p className="font-inter font-medium text-base leading-[22px] tracking-[-0.32px] text-text-light text-center mt-0 mb-auto">
           placeholder text

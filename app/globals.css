@@ -28,12 +28,14 @@
     overflow-x: visible;
     /* Use small viewport height for better Safari support - smallest possible viewport */
     height: 100svh;
-    /* Set a background color that matches the background image to prevent white bars */
-    background-color: #f0f0f0;
+    /* TEST: Set red background to see if white bars persist */
+    background-color: red !important;
     /* Ensure background extends into safe areas - use padding only, no negative margins */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
     /* Ensure background covers the full area including safe areas */
     min-height: calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+    /* Extend background to cover safe areas */
+    margin: calc(-1 * env(safe-area-inset-top, 0px)) calc(-1 * env(safe-area-inset-right, 0px)) calc(-1 * env(safe-area-inset-bottom, 0px)) calc(-1 * env(safe-area-inset-left, 0px));
   }
   
   /* Ensure fixed elements can extend beyond viewport */
