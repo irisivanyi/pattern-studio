@@ -8,6 +8,9 @@ export default function HomePage() {
         <div className="w-full h-[338px] bg-grey-placeholder rounded-[24px] shrink-0" />
         <div className="w-full h-[338px] bg-grey-placeholder rounded-[24px] shrink-0" />
         <div className="w-full h-[338px] bg-grey-placeholder rounded-[24px] shrink-0" />
+        <div className="w-full h-[338px] bg-grey-placeholder rounded-[24px] shrink-0" />
+        <div className="w-full h-[338px] bg-grey-placeholder rounded-[24px] shrink-0" />
+
       </div>
     </div>
   )
