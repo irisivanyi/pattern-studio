@@ -20,6 +20,8 @@
     background: transparent !important;
     /* Ensure body doesn't clip the extended background */
     overflow: visible;
+    /* Ensure body extends to cover full height */
+    height: 100%;
   }
   
   html {
@@ -28,14 +30,6 @@
     overflow-x: visible;
     /* Use small viewport height for better Safari support - smallest possible viewport */
     height: 100svh;
-    /* Set background image directly on html element - extends into safe areas */
-    background-image: var(--bg-image, url('/mobile-bg-var-1.webp'));
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    /* Set opacity via rgba or use a pseudo-element for opacity */
-    background-color: transparent;
     /* Ensure background extends into safe areas - use padding and negative margins */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
     /* Ensure background covers the full area including safe areas */
@@ -58,11 +52,15 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     opacity: 0.64;
     z-index: 0;
     pointer-events: none;
+    /* Ensure it covers the full viewport including safe areas */
     width: calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px));
-    height: calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+    height: calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+    min-width: calc(100vw + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px));
+    min-height: calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
   }
 
   /* Desktop background images */
