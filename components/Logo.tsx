@@ -37,15 +37,22 @@ export default function Logo({ scrolled }: LogoProps) {
         // Base offset from top (reduced from 20px to 10px)
         let offset = safeAreaTop + 10
         
-        // For Chrome mobile, check if browser UI is visible
+        // For Chrome mobile, check if browser UI is visible at top
         if (window.visualViewport) {
+          // visualViewport.offsetTop tells us how much browser UI is at the top
+          const viewportOffsetTop = window.visualViewport.offsetTop || 0
+          
+          // Also check the difference between window and viewport heights
           const viewportHeight = window.visualViewport.height
           const windowHeight = window.innerHeight
-          const browserUIHeight = windowHeight - viewportHeight
+          const totalBrowserUI = windowHeight - viewportHeight
           
-          // If browser UI is visible at top, add its height
-          if (browserUIHeight > 0) {
-            offset += browserUIHeight
+          // Use the larger of offsetTop or calculated browser UI height
+          // This handles both cases: when UI is at top (offsetTop) and when it's split
+          const browserUIAtTop = Math.max(viewportOffsetTop, totalBrowserUI > 0 ? totalBrowserUI : 0)
+          
+          if (browserUIAtTop > 0) {
+            offset += browserUIAtTop
           }
         }
         
@@ -56,25 +63,42 @@ export default function Logo({ scrolled }: LogoProps) {
     checkViewport()
     updateTopOffset()
     
+    // Use requestAnimationFrame for smooth updates
+    let rafId: number | null = null
+    const rafUpdate = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        updateTopOffset()
+        rafId = null
+      })
+    }
+    
     window.addEventListener('resize', () => {
       checkViewport()
-      updateTopOffset()
+      rafUpdate()
     })
     
-    // Listen to visual viewport changes (Chrome mobile)
+    // Listen to scroll events to catch Chrome UI changes
+    window.addEventListener('scroll', rafUpdate, { passive: true })
+    
+    // Listen to visual viewport changes (Chrome mobile) - these fire when browser UI changes
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateTopOffset)
-      window.visualViewport.addEventListener('scroll', updateTopOffset)
+      window.visualViewport.addEventListener('resize', rafUpdate)
+      window.visualViewport.addEventListener('scroll', rafUpdate)
     }
 
     return () => {
       window.removeEventListener('resize', checkViewport)
+      window.removeEventListener('scroll', rafUpdate)
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateTopOffset)
-        window.visualViewport.removeEventListener('scroll', updateTopOffset)
+        window.visualViewport.removeEventListener('resize', rafUpdate)
+        window.visualViewport.removeEventListener('scroll', rafUpdate)
       }
     }
-  }, [])
+  }, [scrolled]) // Re-run when scrolled state changes
 
   // Use useLayoutEffect to mount immediately (synchronously) before paint
   useLayoutEffect(() => {
