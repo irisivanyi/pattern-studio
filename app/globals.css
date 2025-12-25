@@ -5,6 +5,13 @@
 @layer base {
   * {
     @apply box-border;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
   }
 
   body {
@@ -14,8 +21,6 @@
     overflow-x: visible;
     /* Use dynamic viewport height for Safari/iOS - accounts for browser chrome */
     min-height: 100dvh;
-    /* Add padding for bottom nav + safe area on iOS */
-    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
     /* Remove white background to allow background image to show through */
     background: transparent !important;
     /* Ensure body doesn't clip the extended background */

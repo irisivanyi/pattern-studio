@@ -1,6 +1,6 @@
 export default function InfoPage() {
   return (
-    <div className="relative w-full flex items-start justify-center pt-4 pb-4 px-4">
+    <div className="relative w-full flex items-start justify-center pt-0 pb-0 px-4">
       <div 
         className="relative z-[1] w-full max-w-[356px] bg-nav-bg rounded-[32px] px-[19px] py-[25px] flex flex-col overflow-y-auto"
         style={{
