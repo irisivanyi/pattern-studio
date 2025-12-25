@@ -12,6 +12,7 @@ export default function Logo({ scrolled }: LogoProps) {
   const [visible, setVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [topOffset, setTopOffset] = useState(10) // Pixel offset from top when scrolled
+  const [logoWidth, setLogoWidth] = useState<string>('380px') // Logo width for crisp rendering
   // Randomly select one of the three logo variants on each page load
   const [logoVariant] = useState(() => {
     const random = Math.floor(Math.random() * 3) + 1
@@ -21,7 +22,22 @@ export default function Logo({ scrolled }: LogoProps) {
   // Detect mobile viewport and handle Chrome mobile viewport changes
   useLayoutEffect(() => {
     const checkViewport = () => {
-      setIsMobile(window.innerWidth < 640) // sm breakpoint
+      const isMobileViewport = window.innerWidth < 640
+      setIsMobile(isMobileViewport)
+      
+      // Calculate pixel-perfect width for mobile to avoid blur
+      if (isMobileViewport) {
+        const viewportWidth = window.innerWidth
+        const targetVW = 80 // 80vw
+        const devicePixelRatio = window.devicePixelRatio || 1
+        // Calculate exact pixel width, then round to nearest pixel for crisp rendering
+        const calculatedWidth = (viewportWidth * targetVW) / 100
+        // Round to nearest pixel to avoid subpixel rendering
+        const pixelPerfectWidth = Math.round(calculatedWidth)
+        setLogoWidth(`${pixelPerfectWidth}px`)
+      } else {
+        setLogoWidth('380px')
+      }
     }
     
     const updateTopOffset = () => {
@@ -141,23 +157,21 @@ export default function Logo({ scrolled }: LogoProps) {
         src={`/logo-var-${logoVariant}.svg`}
         alt="pattern"
         style={{
-          width: isMobile ? '80vw' : '380px', // Proportional to viewport on mobile
-          maxWidth: isMobile ? '80vw' : '380px',
+          width: logoWidth,
+          maxWidth: logoWidth,
           height: 'auto',
           display: 'block',
-          // Fix SVG blurriness on mobile - use optimize-contrast for sharper rendering
+          // Fix SVG blurriness on mobile - ensure pixel-perfect rendering
           imageRendering: isMobile ? ('-webkit-optimize-contrast' as any) : 'auto',
           // @ts-ignore - WebKit specific property for better SVG rendering
           WebkitImageRendering: isMobile ? '-webkit-optimize-contrast' : 'auto',
           // Force GPU acceleration
-          transform: 'translateZ(0) scale(1)',
+          transform: 'translateZ(0)',
           backfaceVisibility: 'hidden',
           WebkitBackfaceVisibility: 'hidden',
           // Ensure crisp rendering
           WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale',
-          // Prevent subpixel rendering issues
-          willChange: 'auto'
+          MozOsxFontSmoothing: 'grayscale'
         }}
       />
     </div>
