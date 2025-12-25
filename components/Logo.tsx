@@ -11,7 +11,7 @@ export default function Logo({ scrolled }: LogoProps) {
   const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [topOffset, setTopOffset] = useState(60) // Default top offset when scrolled
+  const [topPosition, setTopPosition] = useState('calc(env(safe-area-inset-top, 0px) + 20px)')
   // Randomly select one of the three logo variants on each page load
   const [logoVariant] = useState(() => {
     const random = Math.floor(Math.random() * 3) + 1
@@ -24,39 +24,51 @@ export default function Logo({ scrolled }: LogoProps) {
       setIsMobile(window.innerWidth < 640) // sm breakpoint
     }
     
-    const updateTopOffset = () => {
-      if (typeof window !== 'undefined' && window.visualViewport) {
-        // Calculate top offset based on visual viewport
-        // Account for browser UI at top
-        const viewportTop = window.visualViewport.offsetTop || 0
-        // Add safe area inset for notch
-        const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-top)') || '0', 10) || 0
-        setTopOffset(viewportTop + safeAreaTop + 20) // 20px padding from top
-      } else {
-        // Fallback for browsers without visual viewport API
-        setTopOffset(60)
+    const updateTopPosition = () => {
+      if (typeof window !== 'undefined') {
+        // Get safe area inset
+        const safeAreaTop = parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('env(safe-area-inset-top)')
+            .replace('px', '') || '0',
+          10
+        ) || 0
+        
+        // For Chrome mobile, check if browser UI is visible
+        if (window.visualViewport) {
+          const viewportHeight = window.visualViewport.height
+          const windowHeight = window.innerHeight
+          const browserUIHeight = windowHeight - viewportHeight
+          
+          // If browser UI is visible at top, add its height
+          const topOffset = safeAreaTop + 20 + (browserUIHeight > 0 ? browserUIHeight : 0)
+          setTopPosition(`${topOffset}px`)
+        } else {
+          // Fallback for Safari and other browsers
+          setTopPosition(`calc(env(safe-area-inset-top, 0px) + 20px)`)
+        }
       }
     }
 
     checkViewport()
-    updateTopOffset()
+    updateTopPosition()
     
     window.addEventListener('resize', () => {
       checkViewport()
-      updateTopOffset()
+      updateTopPosition()
     })
     
     // Listen to visual viewport changes (Chrome mobile)
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateTopOffset)
-      window.visualViewport.addEventListener('scroll', updateTopOffset)
+      window.visualViewport.addEventListener('resize', updateTopPosition)
+      window.visualViewport.addEventListener('scroll', updateTopPosition)
     }
 
     return () => {
       window.removeEventListener('resize', checkViewport)
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateTopOffset)
-        window.visualViewport.removeEventListener('scroll', updateTopOffset)
+        window.visualViewport.removeEventListener('resize', updateTopPosition)
+        window.visualViewport.removeEventListener('scroll', updateTopPosition)
       }
     }
   }, [])
@@ -85,13 +97,13 @@ export default function Logo({ scrolled }: LogoProps) {
         WebkitClipPath: 'none',
         boxSizing: 'content-box',
         // Use transform only for better performance - combine position and scale
-        top: '50%',
+        top: scrolled ? topPosition : '50%',
         left: '50%',
         // Combine all transforms for better performance
         // When scrolled: move to top and scale down to 0.5
-        // Use topOffset state for Chrome mobile compatibility
+        // Use dynamic top position that accounts for safe area and browser UI
         transform: scrolled 
-          ? `translate(-50%, -50%) translateY(calc(-50vh + ${topOffset}px)) scale(0.5)` 
+          ? 'translate(-50%, 0) scale(0.5)' 
           : 'translate(-50%, -50%) scale(1)',
         transformOrigin: 'center center',
         // Single transform transition for smooth animation
