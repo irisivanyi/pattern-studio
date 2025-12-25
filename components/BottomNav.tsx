@@ -54,9 +54,10 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
 
   return (
     <nav 
-      className="fixed sm:bottom-8 left-1/2 -translate-x-1/2 bg-nav-bg rounded-[64px] px-5 py-5 flex gap-8 items-center justify-center z-[1000]" 
+      className="fixed sm:bottom-8 left-1/2 -translate-x-1/2 bg-nav-bg rounded-[64px] px-5 py-5 flex gap-8 items-center justify-center z-[1000] shadow-lg" 
       style={{ 
-        bottom: bottomOffset
+        bottom: bottomOffset,
+        boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.1)'
       }}
     >
       <button
