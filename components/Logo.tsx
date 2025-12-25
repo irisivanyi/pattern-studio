@@ -11,20 +11,54 @@ export default function Logo({ scrolled }: LogoProps) {
   const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [topOffset, setTopOffset] = useState(60) // Default top offset when scrolled
   // Randomly select one of the three logo variants on each page load
   const [logoVariant] = useState(() => {
     const random = Math.floor(Math.random() * 3) + 1
     return random
   })
 
-  // Detect mobile viewport
+  // Detect mobile viewport and handle Chrome mobile viewport changes
   useLayoutEffect(() => {
     const checkViewport = () => {
       setIsMobile(window.innerWidth < 640) // sm breakpoint
     }
+    
+    const updateTopOffset = () => {
+      if (typeof window !== 'undefined' && window.visualViewport) {
+        // Calculate top offset based on visual viewport
+        // Account for browser UI at top
+        const viewportTop = window.visualViewport.offsetTop || 0
+        // Add safe area inset for notch
+        const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-top)') || '0', 10) || 0
+        setTopOffset(viewportTop + safeAreaTop + 20) // 20px padding from top
+      } else {
+        // Fallback for browsers without visual viewport API
+        setTopOffset(60)
+      }
+    }
+
     checkViewport()
-    window.addEventListener('resize', checkViewport)
-    return () => window.removeEventListener('resize', checkViewport)
+    updateTopOffset()
+    
+    window.addEventListener('resize', () => {
+      checkViewport()
+      updateTopOffset()
+    })
+    
+    // Listen to visual viewport changes (Chrome mobile)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateTopOffset)
+      window.visualViewport.addEventListener('scroll', updateTopOffset)
+    }
+
+    return () => {
+      window.removeEventListener('resize', checkViewport)
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateTopOffset)
+        window.visualViewport.removeEventListener('scroll', updateTopOffset)
+      }
+    }
   }, [])
 
   // Use useLayoutEffect to mount immediately (synchronously) before paint
@@ -54,10 +88,10 @@ export default function Logo({ scrolled }: LogoProps) {
         top: '50%',
         left: '50%',
         // Combine all transforms for better performance
-        // When scrolled: move to top (20px) and scale down to 0.5
-        // Calculate: from center (50vh) to 20px = translateY(-50vh + 20px)
+        // When scrolled: move to top and scale down to 0.5
+        // Use topOffset state for Chrome mobile compatibility
         transform: scrolled 
-          ? 'translate(-50%, -50%) translateY(calc(-50vh + 60px)) scale(0.5)' 
+          ? `translate(-50%, -50%) translateY(calc(-50vh + ${topOffset}px)) scale(0.5)` 
           : 'translate(-50%, -50%) scale(1)',
         transformOrigin: 'center center',
         // Single transform transition for smooth animation
@@ -78,11 +112,17 @@ export default function Logo({ scrolled }: LogoProps) {
           maxWidth: isMobile ? '80vw' : '380px',
           height: 'auto',
           display: 'block',
-          // Use scale instead of width change for better performance
-          // Prevent blurriness on mobile
-          imageRendering: 'auto' as any,
-          // Force GPU acceleration
+          // iOS Safari blur fixes
+          imageRendering: '-webkit-optimize-contrast' as any,
+          // @ts-ignore - WebKit specific property
+          WebkitImageRendering: '-webkit-optimize-contrast',
+          // Force GPU acceleration and prevent subpixel rendering
           transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          // Prevent blur on scale
+          willChange: 'transform',
+          // Ensure crisp rendering
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale'
         }}

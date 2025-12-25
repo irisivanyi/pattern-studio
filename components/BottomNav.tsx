@@ -1,11 +1,53 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+
 interface BottomNavProps {
   activePage: 'home' | 'info' | 'message'
   onNavigate: (page: 'home' | 'info' | 'message') => void
 }
 
 export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
+  const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
+
+  useEffect(() => {
+    // Handle Chrome mobile viewport changes
+    const updateBottomOffset = () => {
+      if (typeof window !== 'undefined' && window.visualViewport) {
+        // Use visual viewport height to calculate bottom position
+        const viewportHeight = window.visualViewport.height
+        const windowHeight = window.innerHeight
+        const offset = windowHeight - viewportHeight
+        
+        // If there's a difference, it means browser UI is visible
+        if (offset > 0) {
+          setBottomOffset(`calc(1rem + ${offset}px + env(safe-area-inset-bottom))`)
+        } else {
+          setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
+        }
+      }
+    }
+
+    updateBottomOffset()
+
+    // Listen to visual viewport changes (Chrome mobile)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateBottomOffset)
+      window.visualViewport.addEventListener('scroll', updateBottomOffset)
+    }
+
+    // Fallback to window resize
+    window.addEventListener('resize', updateBottomOffset)
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateBottomOffset)
+        window.visualViewport.removeEventListener('scroll', updateBottomOffset)
+      }
+      window.removeEventListener('resize', updateBottomOffset)
+    }
+  }, [])
+
   const handleMessageClick = () => {
     window.location.href = 'mailto:contact@pattern.studio'
   }
@@ -14,7 +56,7 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
     <nav 
       className="fixed sm:bottom-8 left-1/2 -translate-x-1/2 bg-nav-bg rounded-[64px] px-5 py-5 flex gap-8 items-center justify-center z-[1000]" 
       style={{ 
-        bottom: 'calc(1rem + env(safe-area-inset-bottom))'
+        bottom: bottomOffset
       }}
     >
       <button
