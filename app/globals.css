@@ -7,47 +7,23 @@
     @apply box-border;
     margin: 0;
     padding: 0;
+    
   }
 
-  html, body {
+  html {
     margin: 0;
     padding: 0;
-  }
-
-  body {
-    @apply relative;
-    overflow-y: auto;
-    /* Don't clip fixed elements horizontally */
-    overflow-x: visible;
-    /* Use dynamic viewport height for Safari/iOS - accounts for browser chrome */
-    min-height: 100dvh;
-    /* Remove white background to allow background image to show through */
-    background: transparent !important;
-    /* Ensure body doesn't clip the extended background */
-    overflow: visible;
-    /* Ensure body extends to cover full height */
-    height: 100%;
+    background-color: white;
   }
   
-  html {
-    overflow-y: auto;
-    /* Don't clip fixed elements horizontally */
-    overflow-x: visible;
-    /* Use small viewport height for better Safari support - smallest possible viewport */
-    height: 100svh;
-    /* Set gradient background that extends into safe areas - no repeat, fixed size */
-    background: linear-gradient(180deg, #DDF9AB 0%, #DED884 50%, #E5DFAF 100%);
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: 100% 100%;
-    /* Ensure background extends into safe areas - use padding and negative margins */
-    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
-    /* Ensure background covers the full area including safe areas */
-    min-height: calc(100svh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
-    /* Extend background to cover safe areas */
-    margin: calc(-1 * env(safe-area-inset-top, 0px)) calc(-1 * env(safe-area-inset-right, 0px)) calc(-1 * env(safe-area-inset-bottom, 0px)) calc(-1 * env(safe-area-inset-left, 0px));
-    position: relative;
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
   
   /* Ensure fixed elements can extend beyond viewport */
   #__next {
@@ -68,6 +44,11 @@
     font-weight: 500;
     font-style: normal;
     src: local('GT Maru Trial Medium'), local('GT-Maru-Trial-Medium');
+  }
+
+  /* Hide scrollbar for webkit browsers */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
