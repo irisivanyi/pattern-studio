@@ -39,21 +39,14 @@ export default function Logo({ scrolled }: LogoProps) {
         
         // For Chrome mobile, check if browser UI is visible at top
         if (window.visualViewport) {
-          // visualViewport.offsetTop tells us how much browser UI is at the top
+          // visualViewport.offsetTop directly tells us how much browser UI is at the top
+          // When Chrome's UI expands (scrolling up), offsetTop increases
+          // We need to add this to move the logo DOWN to account for the expanded UI
           const viewportOffsetTop = window.visualViewport.offsetTop || 0
           
-          // Also check the difference between window and viewport heights
-          const viewportHeight = window.visualViewport.height
-          const windowHeight = window.innerHeight
-          const totalBrowserUI = windowHeight - viewportHeight
-          
-          // Use the larger of offsetTop or calculated browser UI height
-          // This handles both cases: when UI is at top (offsetTop) and when it's split
-          const browserUIAtTop = Math.max(viewportOffsetTop, totalBrowserUI > 0 ? totalBrowserUI : 0)
-          
-          if (browserUIAtTop > 0) {
-            offset += browserUIAtTop
-          }
+          // Always add the offsetTop - this is the browser UI height at the top
+          // When UI expands, offsetTop increases, so logo moves down (correct behavior)
+          offset += viewportOffsetTop
         }
         
         setTopOffset(offset)
