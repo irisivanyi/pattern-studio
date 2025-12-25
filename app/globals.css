@@ -13,13 +13,13 @@
   html {
     margin: 0;
     padding: 0;
-    background-color: red;
+    background-color: #DDF9AB;
   }
   
   body {
     margin: 0;
     padding: 0;
-    background-color: red;
+    background-color: #DDF9AB;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

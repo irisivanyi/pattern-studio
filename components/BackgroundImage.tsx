@@ -8,7 +8,7 @@ export default function BackgroundImage() {
         left: 0,
         width: '100%',
         height: '100%',
-        background: 'linear-gradient(180deg, #DDF9AB 0%, #DED884 50%, #E5DFAF 100%)',
+        background: 'linear-gradient(180deg, #DDF9AB 0%, #DED884 50%, #DDF9AB 100%)',
         zIndex: 0,
       }}
     />
