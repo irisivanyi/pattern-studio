@@ -34,8 +34,8 @@ export default function Logo({ scrolled }: LogoProps) {
           10
         ) || 0
         
-        // Base offset from top (reduced from 20px to 10px)
-        let offset = safeAreaTop + 10
+        // Base offset from top (reduced to 5px to move logo up)
+        let offset = safeAreaTop + 5
         
         // For Chrome mobile, check if browser UI is visible at top
         if (window.visualViewport) {
@@ -145,19 +145,19 @@ export default function Logo({ scrolled }: LogoProps) {
           maxWidth: isMobile ? '80vw' : '380px',
           height: 'auto',
           display: 'block',
-          // iOS Safari blur fixes
-          imageRendering: '-webkit-optimize-contrast' as any,
-          // @ts-ignore - WebKit specific property
-          WebkitImageRendering: '-webkit-optimize-contrast',
-          // Force GPU acceleration and prevent subpixel rendering
-          transform: 'translateZ(0)',
+          // Fix SVG blurriness on mobile - use optimize-contrast for sharper rendering
+          imageRendering: isMobile ? ('-webkit-optimize-contrast' as any) : 'auto',
+          // @ts-ignore - WebKit specific property for better SVG rendering
+          WebkitImageRendering: isMobile ? '-webkit-optimize-contrast' : 'auto',
+          // Force GPU acceleration
+          transform: 'translateZ(0) scale(1)',
           backfaceVisibility: 'hidden',
           WebkitBackfaceVisibility: 'hidden',
-          // Prevent blur on scale
-          willChange: 'transform',
           // Ensure crisp rendering
           WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale'
+          MozOsxFontSmoothing: 'grayscale',
+          // Prevent subpixel rendering issues
+          willChange: 'auto'
         }}
       />
     </div>
