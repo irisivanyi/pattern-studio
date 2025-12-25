@@ -116,20 +116,20 @@ export default function Logo({ scrolled }: LogoProps) {
         clipPath: 'none',
         WebkitClipPath: 'none',
         boxSizing: 'content-box',
-        // Keep top at 50% and use transform for both position and scale
-        // This ensures smooth simultaneous animation
-        top: '50%',
+        // Use top positioning when scrolled to account for viewport changes
+        // Use transform for centering and scaling
+        top: scrolled ? `${topOffset}px` : '50%',
         left: '50%',
-        // Combine all transforms for smooth simultaneous animation
-        // When scrolled: calculate translateY to move from center (50vh) to topOffset
-        // Formula: from 50vh (center) to topOffset = translateY(-50vh + topOffset)
+        // Combine transforms for smooth animation
+        // When scrolled: just center horizontally and scale
+        // When not scrolled: center both horizontally and vertically
         transform: scrolled 
-          ? `translate(-50%, calc(-50vh + ${topOffset}px)) scale(0.5)` 
+          ? 'translate(-50%, 0) scale(0.5)' 
           : 'translate(-50%, -50%) scale(1)',
         transformOrigin: 'center center',
-        // Single transform transition for smooth simultaneous animation
+        // Transition both top and transform for smooth animation
         transition: visible 
-          ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
+          ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), top 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
           : 'opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         // Force GPU acceleration
         backfaceVisibility: 'hidden',
