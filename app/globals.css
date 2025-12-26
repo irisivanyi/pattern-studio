@@ -50,7 +50,7 @@
     font-family: 'GT Maru Trial';
     font-weight: 500;
     font-style: normal;
-    src: local('GT Maru Trial Medium'), local('GT-Maru-Trial-Medium');
+    src: url('/gt-maru.otf') format('opentype');
   }
 
   /* Hide scrollbar for webkit browsers */
