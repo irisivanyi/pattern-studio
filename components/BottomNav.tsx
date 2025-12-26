@@ -13,24 +13,19 @@ export default function BottomNav() {
 
   useLayoutEffect(() => {
     let lastBottomUI = -1
-    let initialBottomUI = -1
     let rafId: number | null = null
     
     const updateBottomOffset = () => {
       if (typeof window !== 'undefined' && window.visualViewport) {
-        const viewportHeight = window.visualViewport.height
+        const viewport = window.visualViewport
+        const viewportHeight = viewport.height
         const windowHeight = window.innerHeight
         
-        // Calculate current bottom UI height
+        // Calculate bottom UI height
         const bottomUI = Math.max(0, windowHeight - viewportHeight)
         
-        // Capture initial bottom UI on first run
-        if (initialBottomUI === -1) {
-          initialBottomUI = bottomUI
-        }
-        
-        // Only update if bottomUI changed (reduces glitching)
-        if (bottomUI !== lastBottomUI) {
+        // Only update if bottomUI changed
+        if (Math.abs(bottomUI - lastBottomUI) > 1) {
           lastBottomUI = bottomUI
           
           const safeAreaBottom = parseInt(
@@ -40,11 +35,11 @@ export default function BottomNav() {
             10
           ) || 0
 
-          // Position nav: when UI collapses (bottomUI decreases), nav should move DOWN
-          // To move DOWN with bottom positioning, we need to INCREASE the bottom value
-          // So: base + safeArea + (initial - current) = increases when current decreases
           const baseOffset = 16 // 1rem
-          const totalOffset = baseOffset + safeAreaBottom + initialBottomUI - bottomUI
+          // Simple: position at baseOffset + safeArea from window bottom
+          // Add bottomUI only to account for visible UI, but don't let it push nav too far
+          // When UI collapses (bottomUI = 0), nav is at base position
+          const totalOffset = baseOffset + safeAreaBottom + Math.min(bottomUI, 50)
           
           setBottomOffset(`${totalOffset}px`)
         }
