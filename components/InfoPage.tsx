@@ -52,14 +52,24 @@ export default function InfoPage() {
 
           {/* Social Links */}
           <div className="flex flex-col gap-2">
-            <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
+            <a 
+              href="https://x.com/irisivanyi" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 no-underline before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]"
+            >
               <span className="relative z-10">X (Twitter)</span>
               <span className="relative z-10"><ExternalLinkIcon /></span>
-            </button>
-            <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
+            </a>
+            <a 
+              href="https://www.are.na/iris-ivanyi/channels" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 no-underline before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]"
+            >
               <span className="relative z-10">Are.na</span>
               <span className="relative z-10"><ExternalLinkIcon /></span>
-            </button>
+            </a>
           </div>
         </div>
 
