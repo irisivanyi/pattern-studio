@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import BackgroundColor from '@/components/BackgroundColor'
+import BackgroundImage from '@/components/BackgroundImage'
 import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ 
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-inter`}>
         <BackgroundColor />
+        <BackgroundImage />
         {children}
         <Analytics />
       </body>

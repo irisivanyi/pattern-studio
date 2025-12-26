@@ -1,17 +1,16 @@
-export default function BackgroundImage() {
-  return (
-    <div
-      className="inset-0 w-full h-full"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'linear-gradient(180deg, #DDF9AB 0%, #DED884 50%, #DDF9AB 100%)',
-        zIndex: 0,
-      }}
-    />
-  )
-}
+'use client'
 
+import { useEffect } from 'react'
+
+export default function BackgroundImage() {
+  useEffect(() => {
+    // Randomly select one of the 3 background variants (1, 2, or 3)
+    const variant = Math.floor(Math.random() * 3) + 1
+    
+    // Set CSS custom properties for mobile and desktop backgrounds
+    document.documentElement.style.setProperty('--bg-mobile', `url('/mobile-bg-var-${variant}.webp')`)
+    document.documentElement.style.setProperty('--bg-desktop', `url('/desktop-bg-var-${variant}.webp')`)
+  }, [])
+
+  return null
+}

@@ -25,7 +25,7 @@
     left: 0;
     width: 100vw;
     height: 120vh; /* Extends beyond viewport to cover overscroll */
-    background-image: url('/mobile-bg-var-1.webp');
+    background-image: var(--bg-mobile, url('/mobile-bg-var-1.webp')); /* Default fallback */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -36,7 +36,7 @@
   /* Desktop background image */
   @media (min-width: 640px) {
     html::before {
-      background-image: url('/desktop-bg-var-1.webp');
+      background-image: var(--bg-desktop, url('/desktop-bg-var-1.webp')); /* Default fallback */
     }
   }
   
