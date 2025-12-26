@@ -14,17 +14,28 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    /* Fixed background image for all pages - fills viewport only */
+    position: relative;
+  }
+
+  /* Fixed background image using pseudo-element - extends beyond viewport */
+  html::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 120vh; /* Extends beyond viewport to cover overscroll */
     background-image: url('/mobile-bg-var-1.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    z-index: -1; /* Behind all content */
+    pointer-events: none; /* Doesn't interfere with interactions */
   }
 
   /* Desktop background image */
   @media (min-width: 640px) {
-    html {
+    html::before {
       background-image: url('/desktop-bg-var-1.webp');
     }
   }
@@ -36,6 +47,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100%;
+    position: relative;
+    z-index: 0; /* Ensure body content is above background */
   }
 
   
