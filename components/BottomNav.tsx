@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useLayoutEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 export default function BottomNav() {
@@ -9,76 +8,14 @@ export default function BottomNav() {
   
   // Determine active page from pathname
   const activePage = pathname === '/info' ? 'info' : 'home'
-  const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
-
-  useLayoutEffect(() => {
-    let lastBottomUI = -1
-    let rafId: number | null = null
-    
-    const updateBottomOffset = () => {
-      if (typeof window !== 'undefined' && window.visualViewport) {
-        const viewport = window.visualViewport
-        const viewportHeight = viewport.height
-        const windowHeight = window.innerHeight
-        
-        // Calculate bottom UI height
-        const bottomUI = Math.max(0, windowHeight - viewportHeight)
-        
-        // Only update if bottomUI changed
-        if (Math.abs(bottomUI - lastBottomUI) > 1) {
-          lastBottomUI = bottomUI
-          
-          const safeAreaBottom = parseInt(
-            getComputedStyle(document.documentElement)
-              .getPropertyValue('env(safe-area-inset-bottom)')
-              .replace('px', '') || '0',
-            10
-          ) || 0
-
-          const baseOffset = 16 // 1rem
-          // Simple: position at baseOffset + safeArea from window bottom
-          // Add bottomUI only to account for visible UI, but don't let it push nav too far
-          // When UI collapses (bottomUI = 0), nav is at base position
-          const totalOffset = baseOffset + safeAreaBottom + Math.min(bottomUI, 50)
-          
-          setBottomOffset(`${totalOffset}px`)
-        }
-      } else {
-        setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
-      }
-    }
-
-    // Throttled update function
-    const throttledUpdate = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
-        updateBottomOffset()
-        rafId = null
-      })
-    }
-
-    updateBottomOffset()
-
-    // Listen to both resize and visual viewport changes
-    window.addEventListener('resize', throttledUpdate)
-    if (window.visualViewport) {
-      // Listen to resize (fires when UI collapses/expands)
-      window.visualViewport.addEventListener('resize', throttledUpdate)
-      // Also listen to scroll to catch UI changes during scroll
-      window.visualViewport.addEventListener('scroll', throttledUpdate)
-    }
-
-    return () => {
-      window.removeEventListener('resize', throttledUpdate)
-      if (rafId) {
-        cancelAnimationFrame(rafId)
-      }
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', throttledUpdate)
-        window.visualViewport.removeEventListener('scroll', throttledUpdate)
-      }
-    }
-  }, [])
+  
+  // Use CSS dvh units to position nav relative to visual viewport
+  // 100vh - 100dvh gives the browser UI height at bottom
+  // When UI is visible: 100vh - 100dvh = positive value (pushes nav up)
+  // When UI collapses: 100vh - 100dvh = 0 (nav at base position)
+  // This keeps nav at fixed distance from visual viewport bottom
+  // Fallback to simple calc for browsers without dvh support
+  const bottomOffset = 'calc(max(0px, 100vh - 100dvh) + 1rem + env(safe-area-inset-bottom))'
 
   const handleMessageClick = () => {
     window.location.href = 'mailto:contact@pattern.studio'
