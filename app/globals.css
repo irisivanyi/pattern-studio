@@ -14,27 +14,29 @@
     margin: 0;
     padding: 0;
     background-color: #DDF9AB;
+    /* Fixed background image for all pages - fills viewport only */
+    background-image: url('/mobile-bg-var-1.webp');
+    background-size: 100vw 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100%;
+  }
+
+  /* Desktop background image */
+  @media (min-width: 640px) {
+    html {
+      background-image: url('/desktop-bg-var-1.webp');
+    }
   }
   
   body {
     margin: 0;
     padding: 0;
-    background-color: #DDF9AB;
+    background-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Fixed background image for all pages */
-    background-image: url('/mobile-bg-var-1.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-
-  /* Desktop background image */
-  @media (min-width: 640px) {
-    body {
-      background-image: url('/desktop-bg-var-1.webp');
-    }
+    min-height: 100%;
   }
 
   
