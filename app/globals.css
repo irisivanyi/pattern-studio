@@ -22,6 +22,19 @@
     background-color: #DDF9AB;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Fixed background image for all pages */
+    background-image: url('/mobile-bg-var-1.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  /* Desktop background image */
+  @media (min-width: 640px) {
+    body {
+      background-image: url('/desktop-bg-var-1.webp');
+    }
   }
 
   
