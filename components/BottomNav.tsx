@@ -12,55 +12,75 @@ export default function BottomNav() {
   const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
 
   useLayoutEffect(() => {
-    // Use a simpler approach: always position 1rem + safeArea from visual viewport bottom
-    // When Chrome UI collapses, the visual viewport extends, so nav naturally moves down
-    // We only need to account for the initial bottom UI when it's visible
+    let lastBottomUI = -1
+    let initialBottomUI = -1
+    let rafId: number | null = null
+    
     const updateBottomOffset = () => {
       if (typeof window !== 'undefined' && window.visualViewport) {
         const viewportHeight = window.visualViewport.height
         const windowHeight = window.innerHeight
         
-        // Calculate initial bottom UI (only when page loads with UI visible)
-        // Once user scrolls and UI collapses, we want nav to stay at fixed position from viewport
-        const initialBottomUI = Math.max(0, windowHeight - viewportHeight)
+        // Calculate current bottom UI height
+        const bottomUI = Math.max(0, windowHeight - viewportHeight)
         
-        const safeAreaBottom = parseInt(
-          getComputedStyle(document.documentElement)
-            .getPropertyValue('env(safe-area-inset-bottom)')
-            .replace('px', '') || '0',
-          10
-        ) || 0
+        // Capture initial bottom UI on first run
+        if (initialBottomUI === -1) {
+          initialBottomUI = bottomUI
+        }
+        
+        // Only update if bottomUI changed (reduces glitching)
+        if (bottomUI !== lastBottomUI) {
+          lastBottomUI = bottomUI
+          
+          const safeAreaBottom = parseInt(
+            getComputedStyle(document.documentElement)
+              .getPropertyValue('env(safe-area-inset-bottom)')
+              .replace('px', '') || '0',
+            10
+          ) || 0
 
-        // Use the larger of: current bottom UI or a minimum
-        // This ensures nav doesn't jump when UI collapses
-        const bottomUI = Math.max(initialBottomUI, 0)
-        const baseOffset = 16 // 1rem
-        const totalOffset = baseOffset + safeAreaBottom + bottomUI
-        
-        setBottomOffset(`${totalOffset}px`)
+          // Position nav: when UI collapses (bottomUI decreases), nav should move DOWN
+          // To move DOWN with bottom positioning, we need to INCREASE the bottom value
+          // So: base + safeArea + (initial - current) = increases when current decreases
+          const baseOffset = 16 // 1rem
+          const totalOffset = baseOffset + safeAreaBottom + initialBottomUI - bottomUI
+          
+          setBottomOffset(`${totalOffset}px`)
+        }
       } else {
         setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
       }
     }
 
-    // Only update on resize/orientation, not on every scroll
-    // This prevents glitching - the nav will stay in a stable position
-    const handleResize = () => {
-      requestAnimationFrame(updateBottomOffset)
+    // Throttled update function
+    const throttledUpdate = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        updateBottomOffset()
+        rafId = null
+      })
     }
 
     updateBottomOffset()
 
-    window.addEventListener('resize', handleResize)
+    // Listen to both resize and visual viewport changes
+    window.addEventListener('resize', throttledUpdate)
     if (window.visualViewport) {
-      // Only listen to resize, not scroll - prevents glitching
-      window.visualViewport.addEventListener('resize', handleResize)
+      // Listen to resize (fires when UI collapses/expands)
+      window.visualViewport.addEventListener('resize', throttledUpdate)
+      // Also listen to scroll to catch UI changes during scroll
+      window.visualViewport.addEventListener('scroll', throttledUpdate)
     }
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', throttledUpdate)
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleResize)
+        window.visualViewport.removeEventListener('resize', throttledUpdate)
+        window.visualViewport.removeEventListener('scroll', throttledUpdate)
       }
     }
   }, [])
