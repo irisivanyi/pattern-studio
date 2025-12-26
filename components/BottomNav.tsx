@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useLayoutEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 export default function BottomNav() {
@@ -8,14 +9,69 @@ export default function BottomNav() {
   
   // Determine active page from pathname
   const activePage = pathname === '/info' ? 'info' : 'home'
-  
-  // Use CSS dvh units to position nav relative to visual viewport
-  // 100vh - 100dvh gives the browser UI height at bottom
-  // When UI is visible: 100vh - 100dvh = positive value (pushes nav up)
-  // When UI collapses: 100vh - 100dvh = 0 (nav at base position)
-  // This keeps nav at fixed distance from visual viewport bottom
-  // Fallback to simple calc for browsers without dvh support
-  const bottomOffset = 'calc(max(0px, 100vh - 100dvh) + 1rem + env(safe-area-inset-bottom))'
+  const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
+
+  useLayoutEffect(() => {
+    let rafId: number | null = null
+    
+    const updateBottomOffset = () => {
+      if (typeof window !== 'undefined' && window.visualViewport) {
+        const viewport = window.visualViewport
+        const viewportHeight = viewport.height
+        const viewportTop = viewport.offsetTop || 0
+        const windowHeight = window.innerHeight
+        
+        // Calculate bottom UI height specifically
+        // Bottom UI = window height - visual viewport height - visual viewport top offset
+        const bottomUI = Math.max(0, windowHeight - viewportHeight - viewportTop)
+        
+        const safeAreaBottom = parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('env(safe-area-inset-bottom)')
+            .replace('px', '') || '0',
+          10
+        ) || 0
+
+        // Position nav at fixed distance from visual viewport bottom
+        // bottomUI accounts for Chrome's bottom UI component
+        const baseOffset = 16 // 1rem
+        const totalOffset = baseOffset + safeAreaBottom + bottomUI
+        
+        setBottomOffset(`${totalOffset}px`)
+      } else {
+        // Fallback for browsers without visual viewport API
+        setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
+      }
+    }
+
+    // Throttled update
+    const throttledUpdate = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        updateBottomOffset()
+        rafId = null
+      })
+    }
+
+    updateBottomOffset()
+
+    window.addEventListener('resize', throttledUpdate)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', throttledUpdate)
+      window.visualViewport.addEventListener('scroll', throttledUpdate)
+    }
+
+    return () => {
+      window.removeEventListener('resize', throttledUpdate)
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', throttledUpdate)
+        window.visualViewport.removeEventListener('scroll', throttledUpdate)
+      }
+    }
+  }, [])
 
   const handleMessageClick = () => {
     window.location.href = 'mailto:contact@pattern.studio'
