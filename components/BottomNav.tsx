@@ -17,7 +17,13 @@ export default function BottomNav() {
       if (typeof window !== 'undefined' && window.visualViewport) {
         const viewportHeight = window.visualViewport.height
         const windowHeight = window.innerHeight
-        const browserUIHeight = windowHeight - viewportHeight
+        const viewportOffsetTop = window.visualViewport.offsetTop || 0
+        const viewportOffsetLeft = window.visualViewport.offsetLeft || 0
+        
+        // Calculate how much browser UI is at the bottom
+        // When UI collapses, viewportHeight increases, so browserUIHeight decreases
+        const browserUIHeight = Math.max(0, windowHeight - viewportHeight - viewportOffsetTop)
+        
         const safeAreaBottom = parseInt(
           getComputedStyle(document.documentElement)
             .getPropertyValue('env(safe-area-inset-bottom)')
@@ -25,10 +31,11 @@ export default function BottomNav() {
           10
         ) || 0
 
-        // Calculate the bottom position relative to the visual viewport
-        // 1rem (16px) + safeAreaBottom + any browser UI at the bottom
-        const newOffset = `calc(1rem + ${safeAreaBottom}px + ${browserUIHeight}px)`
-        setBottomOffset(newOffset)
+        // Position from visual viewport bottom: 1rem + safe area + browser UI
+        // When UI collapses, browserUIHeight becomes 0 or small, so nav moves down correctly
+        const baseOffset = 16 // 1rem in pixels
+        const totalOffset = baseOffset + safeAreaBottom + browserUIHeight
+        setBottomOffset(`${totalOffset}px`)
       } else {
         setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
       }
@@ -37,11 +44,17 @@ export default function BottomNav() {
     updateBottomOffset()
 
     // Use requestAnimationFrame for smooth updates
+    let rafId: number | null = null
     const rafUpdate = () => {
-      requestAnimationFrame(updateBottomOffset)
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        updateBottomOffset()
+        rafId = null
+      })
     }
 
     window.addEventListener('resize', rafUpdate)
+    window.addEventListener('scroll', rafUpdate, { passive: true })
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', rafUpdate)
       window.visualViewport.addEventListener('scroll', rafUpdate)
@@ -49,6 +62,10 @@ export default function BottomNav() {
 
     return () => {
       window.removeEventListener('resize', rafUpdate)
+      window.removeEventListener('scroll', rafUpdate)
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', rafUpdate)
         window.visualViewport.removeEventListener('scroll', rafUpdate)
