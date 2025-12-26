@@ -39,6 +39,13 @@
     z-index: 1;
   }
 
+  /* Mobile scroll-snap for home page images */
+  @media (max-width: 639px) {
+    html {
+      scroll-snap-type: y mandatory;
+    }
+  }
+
   @font-face {
     font-family: 'GT Maru Trial';
     font-weight: 500;
