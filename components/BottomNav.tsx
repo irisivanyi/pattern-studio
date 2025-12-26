@@ -12,17 +12,17 @@ export default function BottomNav() {
   const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
 
   useLayoutEffect(() => {
-    // Handle Chrome mobile viewport changes
+    // Use a simpler approach: always position 1rem + safeArea from visual viewport bottom
+    // When Chrome UI collapses, the visual viewport extends, so nav naturally moves down
+    // We only need to account for the initial bottom UI when it's visible
     const updateBottomOffset = () => {
       if (typeof window !== 'undefined' && window.visualViewport) {
         const viewportHeight = window.visualViewport.height
         const windowHeight = window.innerHeight
-        const viewportOffsetTop = window.visualViewport.offsetTop || 0
-        const viewportOffsetLeft = window.visualViewport.offsetLeft || 0
         
-        // Calculate how much browser UI is at the bottom
-        // When UI collapses, viewportHeight increases, so browserUIHeight decreases
-        const browserUIHeight = Math.max(0, windowHeight - viewportHeight - viewportOffsetTop)
+        // Calculate initial bottom UI (only when page loads with UI visible)
+        // Once user scrolls and UI collapses, we want nav to stay at fixed position from viewport
+        const initialBottomUI = Math.max(0, windowHeight - viewportHeight)
         
         const safeAreaBottom = parseInt(
           getComputedStyle(document.documentElement)
@@ -31,44 +31,36 @@ export default function BottomNav() {
           10
         ) || 0
 
-        // Position from visual viewport bottom: 1rem + safe area + browser UI
-        // When UI collapses, browserUIHeight becomes 0 or small, so nav moves down correctly
-        const baseOffset = 16 // 1rem in pixels
-        const totalOffset = baseOffset + safeAreaBottom + browserUIHeight
+        // Use the larger of: current bottom UI or a minimum
+        // This ensures nav doesn't jump when UI collapses
+        const bottomUI = Math.max(initialBottomUI, 0)
+        const baseOffset = 16 // 1rem
+        const totalOffset = baseOffset + safeAreaBottom + bottomUI
+        
         setBottomOffset(`${totalOffset}px`)
       } else {
         setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
       }
     }
 
-    updateBottomOffset()
-
-    // Use requestAnimationFrame for smooth updates
-    let rafId: number | null = null
-    const rafUpdate = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
-        updateBottomOffset()
-        rafId = null
-      })
+    // Only update on resize/orientation, not on every scroll
+    // This prevents glitching - the nav will stay in a stable position
+    const handleResize = () => {
+      requestAnimationFrame(updateBottomOffset)
     }
 
-    window.addEventListener('resize', rafUpdate)
-    window.addEventListener('scroll', rafUpdate, { passive: true })
+    updateBottomOffset()
+
+    window.addEventListener('resize', handleResize)
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', rafUpdate)
-      window.visualViewport.addEventListener('scroll', rafUpdate)
+      // Only listen to resize, not scroll - prevents glitching
+      window.visualViewport.addEventListener('resize', handleResize)
     }
 
     return () => {
-      window.removeEventListener('resize', rafUpdate)
-      window.removeEventListener('scroll', rafUpdate)
-      if (rafId) {
-        cancelAnimationFrame(rafId)
-      }
+      window.removeEventListener('resize', handleResize)
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', rafUpdate)
-        window.visualViewport.removeEventListener('scroll', rafUpdate)
+        window.visualViewport.removeEventListener('resize', handleResize)
       }
     }
   }, [])
