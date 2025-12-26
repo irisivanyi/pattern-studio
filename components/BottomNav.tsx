@@ -13,6 +13,7 @@ export default function BottomNav() {
 
   useLayoutEffect(() => {
     let rafId: number | null = null
+    let lastBottomUI = -1
     
     const updateBottomOffset = () => {
       if (typeof window !== 'undefined' && window.visualViewport) {
@@ -21,9 +22,14 @@ export default function BottomNav() {
         const viewportTop = viewport.offsetTop || 0
         const windowHeight = window.innerHeight
         
-        // Calculate bottom UI height specifically
-        // Bottom UI = window height - visual viewport height - visual viewport top offset
-        const bottomUI = Math.max(0, windowHeight - viewportHeight - viewportTop)
+        // Calculate bottom UI height: space taken by Chrome's bottom UI
+        // When UI is visible: bottomUI > 0
+        // When UI collapses: bottomUI = 0 (or close to it)
+        // Use simpler calculation: difference between window and viewport height
+        const bottomUI = Math.max(0, windowHeight - viewportHeight)
+        
+        // Always update to ensure smooth movement
+        lastBottomUI = bottomUI
         
         const safeAreaBottom = parseInt(
           getComputedStyle(document.documentElement)
@@ -33,7 +39,10 @@ export default function BottomNav() {
         ) || 0
 
         // Position nav at fixed distance from visual viewport bottom
-        // bottomUI accounts for Chrome's bottom UI component
+        // Visual viewport bottom is at: bottomUI from window bottom
+        // We want nav at: baseOffset + safeAreaBottom from visual viewport bottom
+        // So from window bottom: bottomUI + baseOffset + safeAreaBottom
+        // When bottomUI decreases (UI collapses), nav moves DOWN (closer to window bottom)
         const baseOffset = 16 // 1rem
         const totalOffset = baseOffset + safeAreaBottom + bottomUI
         
@@ -55,7 +64,9 @@ export default function BottomNav() {
 
     updateBottomOffset()
 
+    // Listen to multiple events to catch all UI changes
     window.addEventListener('resize', throttledUpdate)
+    window.addEventListener('scroll', throttledUpdate, { passive: true })
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', throttledUpdate)
       window.visualViewport.addEventListener('scroll', throttledUpdate)
@@ -63,6 +74,7 @@ export default function BottomNav() {
 
     return () => {
       window.removeEventListener('resize', throttledUpdate)
+      window.removeEventListener('scroll', throttledUpdate)
       if (rafId) {
         cancelAnimationFrame(rafId)
       }
