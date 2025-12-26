@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 
-interface BottomNavProps {
-  activePage: 'home' | 'info' | 'message'
-  onNavigate: (page: 'home' | 'info' | 'message') => void
-}
-
-export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
+export default function BottomNav() {
+  const pathname = usePathname()
+  const router = useRouter()
+  
+  // Determine active page from pathname
+  const activePage = pathname === '/info' ? 'info' : 'home'
   const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
 
   useEffect(() => {
@@ -61,7 +62,10 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
       }}
     >
       <button
-        onClick={() => onNavigate('home')}
+        onClick={() => {
+          router.push('/')
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
         className="group w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center overflow-visible"
         aria-label="Home"
       >
@@ -91,7 +95,10 @@ export default function BottomNav({ activePage, onNavigate }: BottomNavProps) {
         )}
       </button>
       <button
-        onClick={() => onNavigate('info')}
+        onClick={() => {
+          router.push('/info')
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
         className="group w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center overflow-visible"
         aria-label="Info"
       >

@@ -33,30 +33,30 @@ export default function InfoPage() {
         className="relative z-[1] w-full max-w-[356px] bg-nav-bg rounded-[32px] px-[19px] py-[25px] flex flex-col"
       >
         {/* Title */}
-        <h1 className="font-inter font-medium text-[28px] leading-[34px] tracking-[-0.2px] text-[#1a1a1a] mb-6 px-2">
+        <h1 className="font-maru font-medium text-[28px] leading-[34px] tracking-[-2px] text-[#1a1a1a] mb-6 px-2">
          Turning vision into cultural signal.
         </h1>
 
         {/* Description */}
-        <p className="font-inter font-medium text-base leading-[22px] tracking-[-0.32px] text-[#1a1a1a] mb-8 px-2">
-          We create products and brands for contemporary leaders across consumer apps, retail, and social platforms.
+        <p className="font-inter font-medium text-base leading-[22px] tracking-[-0.2px] text-[#1a1a1a] mb-8 px-2">
+          Pattern designs products and brands for contemporary leaders across consumer apps, retail, and social platforms.
         </p>
 
         {/* Contact and Social Links */}
         <div className="flex flex-col gap-2 mb-8">
           {/* Contact Button */}
-          <button className="w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#1a1a1a] border-none rounded-[64px] text-[#f4f4f4] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-opacity duration-200 hover:opacity-90 active:opacity-80 flex items-center justify-between px-4">
-            <span>Contact</span>
-            <ContactIcon />
+          <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#FFA1FC] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
+            <span className="relative z-10">Contact</span>
+            <span className="relative z-10"><ContactIcon /></span>
           </button>
 
           {/* Social Links */}
           <div className="flex flex-col gap-2">
-            <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-200 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-200 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
+            <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
               <span className="relative z-10">X (Twitter)</span>
               <span className="relative z-10"><ExternalLinkIcon /></span>
             </button>
-            <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-200 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-200 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
+            <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
               <span className="relative z-10">Are.na</span>
               <span className="relative z-10"><ExternalLinkIcon /></span>
             </button>
@@ -69,14 +69,37 @@ export default function InfoPage() {
             Select clients
           </p>
           <div className="flex flex-wrap gap-2">
-            {['Pangaia', 'Zora', 'tyb', 'fal', 'MoMA', 'Barbican', 'iconslab', 'CAE Collective'].map((client) => (
-              <button
-                key={client}
-                className="relative h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-200 active:opacity-80 flex items-center gap-1 px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-200 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]"
-              >
-                <span className="relative z-10">{client}</span>
-                <span className="relative z-10"><ExternalLinkIcon /></span>
-              </button>
+            {[
+              { name: 'Pangaia', url: 'https://pangaia.com/' },
+              { name: 'Zora', url: 'https://apps.apple.com/us/app/zora-post-trade-earn-crypto/id6474192103' },
+              { name: 'tyb', url: 'https://apps.apple.com/gb/app/try-your-best/id6449951641' },
+              { name: 'fal', url: 'https://fal.ai/' },
+              { name: 'MoMA', url: 'https://www.moma.org/' },
+              { name: 'Barbican', url: 'https://www.barbican.org.uk/' },
+              { name: 'iconslab', url: 'https://iconslab.net/' },
+              { name: 'CAE Collective', url: 'https://www.cae-collective.com/feed' },
+            ].map((client) => (
+              client.url ? (
+                <a
+                  key={client.name}
+                  href={client.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center gap-1 px-4 no-underline before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]"
+                >
+                  <span className="relative z-10">{client.name}</span>
+                  <span className="relative z-10"><ExternalLinkIcon /></span>
+                </a>
+              ) : (
+                <button
+                  key={client.name}
+                  className="relative h-[46px] min-h-[46px] max-h-[46px] bg-[#e9e9e9] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center gap-1 px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]"
+                  disabled
+                >
+                  <span className="relative z-10">{client.name}</span>
+                  <span className="relative z-10"><ExternalLinkIcon /></span>
+                </button>
+              )
             ))}
           </div>
         </div>
@@ -108,9 +131,9 @@ export default function InfoPage() {
         </div>
 
         {/* Bottom Contact Button */}
-        <button className="w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#1a1a1a] border-none rounded-[64px] text-[#f4f4f4] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-opacity duration-200 hover:opacity-90 active:opacity-80 flex items-center justify-between px-4">
-          <span>Contact</span>
-          <ContactIcon />
+        <button className="relative w-full h-[46px] min-h-[46px] max-h-[46px] bg-[#FFA1FC] border-none rounded-[64px] text-[#1c1c1c] font-inter font-medium text-base leading-[20px] tracking-[-0.28px] cursor-pointer transition-all duration-0 active:opacity-80 flex items-center justify-between px-4 before:content-[''] before:absolute before:inset-0 before:rounded-[64px] before:opacity-0 before:transition-opacity before:duration-0 hover:before:opacity-100 before:bg-[rgba(26,26,26,0.08)]">
+          <span className="relative z-10">Contact</span>
+          <span className="relative z-10"><ContactIcon /></span>
         </button>
       </div>
     </div>

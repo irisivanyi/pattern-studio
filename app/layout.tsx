@@ -31,6 +31,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-inter`}>
         <BackgroundColor />
         {children}
+        <Analytics />
       </body>
     </html>
   )
