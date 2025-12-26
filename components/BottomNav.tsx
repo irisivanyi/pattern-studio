@@ -16,8 +16,11 @@ export default function BottomNav() {
       return
     }
 
+    const vp = window.visualViewport
+
     const updatePosition = () => {
-      const vp = window.visualViewport
+      if (!vp) return
+      
       const windowHeight = window.innerHeight
       const viewportHeight = vp.height
       
@@ -41,7 +44,6 @@ export default function BottomNav() {
     updatePosition()
 
     // Listen to visual viewport changes (works with scroll-snap)
-    const vp = window.visualViewport
     vp.addEventListener('resize', updatePosition)
     vp.addEventListener('scroll', updatePosition)
 
