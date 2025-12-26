@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 export default function BottomNav() {
@@ -11,41 +11,48 @@ export default function BottomNav() {
   const activePage = pathname === '/info' ? 'info' : 'home'
   const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Handle Chrome mobile viewport changes
     const updateBottomOffset = () => {
       if (typeof window !== 'undefined' && window.visualViewport) {
-        // Use visual viewport height to calculate bottom position
         const viewportHeight = window.visualViewport.height
         const windowHeight = window.innerHeight
-        const offset = windowHeight - viewportHeight
-        
-        // If there's a difference, it means browser UI is visible
-        if (offset > 0) {
-          setBottomOffset(`calc(1rem + ${offset}px + env(safe-area-inset-bottom))`)
-        } else {
-          setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
-        }
+        const browserUIHeight = windowHeight - viewportHeight
+        const safeAreaBottom = parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('env(safe-area-inset-bottom)')
+            .replace('px', '') || '0',
+          10
+        ) || 0
+
+        // Calculate the bottom position relative to the visual viewport
+        // 1rem (16px) + safeAreaBottom + any browser UI at the bottom
+        const newOffset = `calc(1rem + ${safeAreaBottom}px + ${browserUIHeight}px)`
+        setBottomOffset(newOffset)
+      } else {
+        setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
       }
     }
 
     updateBottomOffset()
 
-    // Listen to visual viewport changes (Chrome mobile)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateBottomOffset)
-      window.visualViewport.addEventListener('scroll', updateBottomOffset)
+    // Use requestAnimationFrame for smooth updates
+    const rafUpdate = () => {
+      requestAnimationFrame(updateBottomOffset)
     }
 
-    // Fallback to window resize
-    window.addEventListener('resize', updateBottomOffset)
+    window.addEventListener('resize', rafUpdate)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', rafUpdate)
+      window.visualViewport.addEventListener('scroll', rafUpdate)
+    }
 
     return () => {
+      window.removeEventListener('resize', rafUpdate)
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateBottomOffset)
-        window.visualViewport.removeEventListener('scroll', updateBottomOffset)
+        window.visualViewport.removeEventListener('resize', rafUpdate)
+        window.visualViewport.removeEventListener('scroll', rafUpdate)
       }
-      window.removeEventListener('resize', updateBottomOffset)
     }
   }, [])
 
