@@ -12,76 +12,42 @@ export default function BottomNav() {
   const [bottomOffset, setBottomOffset] = useState('calc(1rem + env(safe-area-inset-bottom))')
 
   useLayoutEffect(() => {
-    let rafId: number | null = null
-    let lastBottomUI = -1
-    
-    const updateBottomOffset = () => {
-      if (typeof window !== 'undefined' && window.visualViewport) {
-        const viewport = window.visualViewport
-        const viewportHeight = viewport.height
-        const viewportTop = viewport.offsetTop || 0
-        const windowHeight = window.innerHeight
-        
-        // Calculate bottom UI height: space taken by Chrome's bottom UI
-        // When UI is visible: bottomUI > 0
-        // When UI collapses: bottomUI = 0 (or close to it)
-        // Use simpler calculation: difference between window and viewport height
-        const bottomUI = Math.max(0, windowHeight - viewportHeight)
-        
-        // Always update to ensure smooth movement
-        lastBottomUI = bottomUI
-        
-        const safeAreaBottom = parseInt(
-          getComputedStyle(document.documentElement)
-            .getPropertyValue('env(safe-area-inset-bottom)')
-            .replace('px', '') || '0',
-          10
-        ) || 0
-
-        // Position nav at fixed distance from visual viewport bottom
-        // Visual viewport bottom is at: bottomUI from window bottom
-        // We want nav at: baseOffset + safeAreaBottom from visual viewport bottom
-        // So from window bottom: bottomUI + baseOffset + safeAreaBottom
-        // When bottomUI decreases (UI collapses), nav moves DOWN (closer to window bottom)
-        const baseOffset = 16 // 1rem
-        const totalOffset = baseOffset + safeAreaBottom + bottomUI
-        
-        setBottomOffset(`${totalOffset}px`)
-      } else {
-        // Fallback for browsers without visual viewport API
-        setBottomOffset('calc(1rem + env(safe-area-inset-bottom))')
-      }
+    if (typeof window === 'undefined' || !window.visualViewport) {
+      return
     }
 
-    // Throttled update
-    const throttledUpdate = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
-        updateBottomOffset()
-        rafId = null
-      })
+    const updatePosition = () => {
+      const vp = window.visualViewport
+      const windowHeight = window.innerHeight
+      const viewportHeight = vp.height
+      
+      // Calculate bottom UI: difference between window and viewport height
+      const bottomUI = Math.max(0, windowHeight - viewportHeight)
+      
+      const safeArea = parseInt(
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('env(safe-area-inset-bottom)')
+          .replace('px', '') || '0',
+        10
+      ) || 0
+
+      // Position from visual viewport bottom
+      // When UI collapses (bottomUI decreases), nav moves down
+      const offset = 16 + safeArea + bottomUI
+      setBottomOffset(`${offset}px`)
     }
 
-    updateBottomOffset()
+    // Update immediately
+    updatePosition()
 
-    // Listen to multiple events to catch all UI changes
-    window.addEventListener('resize', throttledUpdate)
-    window.addEventListener('scroll', throttledUpdate, { passive: true })
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', throttledUpdate)
-      window.visualViewport.addEventListener('scroll', throttledUpdate)
-    }
+    // Listen to visual viewport changes (works with scroll-snap)
+    const vp = window.visualViewport
+    vp.addEventListener('resize', updatePosition)
+    vp.addEventListener('scroll', updatePosition)
 
     return () => {
-      window.removeEventListener('resize', throttledUpdate)
-      window.removeEventListener('scroll', throttledUpdate)
-      if (rafId) {
-        cancelAnimationFrame(rafId)
-      }
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', throttledUpdate)
-        window.visualViewport.removeEventListener('scroll', throttledUpdate)
-      }
+      vp.removeEventListener('resize', updatePosition)
+      vp.removeEventListener('scroll', updatePosition)
     }
   }, [])
 
